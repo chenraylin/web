@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ------------------------------ -->
+    <!-- 規定html的文檔字符編碼 -->
+    <meta charset="UTF-8">
+    <!-- ------------------------------ -->
+    <!-- 指定螢幕寬度為裝置寬度，畫面載入初始縮放比例 100% -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 以下兩種設定都可以防止使用者做畫面縮放，將畫面鎖在縮放比例 100% -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"> -->
+    <!-- ------------------------------ -->
+    <!-- 強制瀏覽器呈現為特定的版本的標準。 -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- ------------------------------ -->
+    <title>[Portfolio] 林辰叡 Chen-Ray, Lin</title>
+    <!-- ----------CSS package--------- -->
+    <link href="./link_color_change.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" rel="stylesheet">
+    <!-- ------------------------------ -->
+    <style>
+        /* 文字樣式設定 */
+        #description * {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* 面板設定高度為滿版 */
+        html,
+        body {
+            height: 100%;
+        }
+
+        /* 面板設定高度為滿版 */
+        body {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #64b3f4;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #64b3f4, #c2e59c);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #64b3f4, #c2e59c);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+
+        /* 中間的白色框框 */
+        #main {
+            width: 86%;
+            height: 86%;
+            max-width: 1280px;
+            max-height: 640px;
+            min-height: 376px;
+            background-color: #fff;
+            box-shadow: 0px -4px 48px rgba(0, 0, 0,
+                0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+            display: flex;
+            border-radius: 10px;
+        }
+
+        #photo,
+        #description {
+            flex: 1;
+            /* flex排版 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /*         */
+        }
+
+        #image {
+            background: url('https://scontent-sin6-2.xx.fbcdn.net/v/t1.0-9/44259749_2297465296948225_8075995708689219584_o.jpg?_nc_cat=110&_nc_ht=scontent-sin6-2.xx&oh=76b63eae578903a82e296e3abd31d190&oe=5CCB6361') no-repeat center top;
+            background-size: cover;
+            /* background-size: contain; */
+            width: 60%;
+            height: 112%;
+            box-shadow: 0px -4px 48px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+            border-radius: 10px;
+        }
+
+        #image:hover {
+            filter: grayscale(1);
+            transition: 3s;
+        }
+
+        #header,
+        #footer {
+            text-align: center;
+            /* 可以將文字置中 */
+        }
+
+        #title {
+            background-color: #263238;
+            color: #eee;
+            padding: 4px 12px;
+            /* margin-bottom: 6px; */
+            line-height: 32px;
+        }
+
+        #name {
+            font-size: 26px;
+            padding: 4px 12px;
+        }
+
+        #header,
+        #body {
+            margin-bottom: 12px;
+        }
+
+        #body {
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 50px;
+        }
+
+        #more-button {
+            /* border: 2px solid; */
+            border: 2px dashed;
+            color: #178202;
+            background: white;
+            /* background: none; */
+            font-size: 22px;
+            height: 40px;
+            padding: 0 24px;
+            border-radius: 28px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Extra small devices (portrait phones, less than 576px) */
+        @media (max-width: 575.98px) {
+            #main {
+                width: 100%;
+                height: 100%;
+                max-height: none;
+                /* 將之前的設定去掉 */
+                flex-direction: column;
+            }
+
+            #photo {
+                flex: 0.5;
+            }
+
+            #image {
+                height: 100%;
+                box-shadow: none;
+                width: 100%;
+            }
+
+            #content {
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                /* overflow-y: hidden; */
+                box-sizing: border-box;
+                padding: 24px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+	<!-- 層層相扣 -->
+    <div id="main">
+        <div id="photo">
+            <div id="image"></div>
+        </div>
+        <div id="description">
+            <div id="content">
+                <div id="header">
+                    <span id="title">Student</span>
+                    <!-- <div id="title">ACTOR</div> -->
+                    <div id="name">Chen-Ray, Lin</div>
+                </div>
+
+                <div id="body">  Welcome to my website!<br> 
+                    Hope you have a nice day!
+                </div>
+
+                <div id="footer">
+                    <button id="more-button" onclick="window.location.href='./portfolio.html'">See Me More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
