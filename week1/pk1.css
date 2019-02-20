@@ -1,0 +1,15 @@
+        p,
+        li {
+            font-size: 16px;
+            line-height: 1.25;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 30px;
+            font-family: 微軟正黑體;
+        }
+
+        h3 {
+            font-family: 'Coiny', cursive;
+        }

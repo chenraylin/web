@@ -1,0 +1,308 @@
+<!-- "xml"或是"json"的交換格式 -->
+<!-- 若是使用json時，key記得使用雙引號(" ") -->
+<!-- js的function可以包很多東西，像是object、value、布林值.... -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Week4 Practice</title>
+    <meta charset="UTF-8" />
+    <style>
+        .zone {
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+
+        .zone h3 {
+            font-weight: bold;
+        }
+
+
+        th, td {
+            border: 1px solid #333;
+        }
+
+        .photo1 {
+           float: left;
+           width: 30px;
+           height: 30px;
+           background: url('https://scontent.ftpe8-1.fna.fbcdn.net/v/t1.0-9/1383055_10201847128290498_1925702973_n.jpg?_nc_cat=109&_nc_ht=scontent.ftpe8-1.fna&oh=afe44a26293cf803cad3ed062f20173f&oe=5CFE89B3') no-repeat center;
+           background-size: cover;
+        }
+       .photo2 {
+           float: left;
+           width: 30px;
+           height: 30px;
+           background: url('https://scontent.ftpe8-2.fna.fbcdn.net/v/t31.0-8/467551_3574121923456_887768388_o.jpg?_nc_cat=101&_nc_ht=scontent.ftpe8-2.fna&oh=9c29d9675b4ee3bbfd3af0c17d4dc285&oe=5CB434F4') no-repeat center;
+           background-size: cover;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 建立parking table -->
+    <div class="zone" style="display: none">
+        <table id="parkinfo"></table>
+    </div>
+    <!-- ------ -->
+    <div id="wurobot-zone" class="zone">
+        <h3>Condition Practice</h3>
+        To: 吳少凱<input type="text" id="input-wuskai">
+        <button id="btn-wuskai">送出</button>
+    </div>
+
+    <div id="object-zone" class="zone">
+        <h3>Object Practice</h3>
+        <table></table>
+    </div>
+    <div id="array-zone" class="zone"></div>
+
+    <!-- <link href" -->
+    <!-- 導入javascript檔案(需放在要跑的程式前面) -->
+    <!-- <script src="路外停車資訊.js"></script> -->
+    <script src="data/路外停車資訊.js"></script>
+    <script src="batter.js"></script>
+    <!-- ------------------ -->
+    <script>
+        const pi = 3.1415926;
+        var parkTable = document.querySelector('#parkinfo'); //抓ID //var為全域變數 //let為區域變數 //const為常數
+        // park_data.parkingLots[0]
+        // Object.keys(park_data.parkingLots[0])
+        var ColName = Object.keys(park_data.parkingLots[0]);
+
+        var colTr = document.createElement('tr');
+        parkTable.appendChild(colTr);
+        ColName.forEach((c) => {
+            var th = document.createElement('th');
+            th.textContent = c;
+            colTr.appendChild(th);
+        });
+
+        park_data.parkingLots.forEach((dataObject) => { //走每一筆資料[列]
+            let tr = document.createElement('tr');
+
+            ColName.forEach((key) => { //走每一個欄位
+                let td = document.createElement('td');
+                td.textContent = dataObject[key];
+                tr.appendChild(td);
+            });
+            parkTable.appendChild(tr);
+        });
+    </script>
+    <!-- ------------------ -->
+    <script>
+        var newBBOData = {};
+
+        bbo_data.forEach((playerData) => {
+            let key = playerData['年'] + playerData['姓名'];// + playerData['卡色'];
+
+            let content = '  ';
+            for (let k in playerData) {
+                content = content + k + ':' + playerData[k] + ',';
+            }
+            if (!newBBOData[key]){
+                newBBOData[key] = [content];
+            }else{
+                newBBOData[key].push(content);
+            }
+
+        });
+    </script>
+    <!-- ------------------ -->
+    <script>
+        //---------------------------
+
+        // Create Array
+        var fruits = ["Banana", "Orange", "Apple", "Mango"];
+        // 放入變數
+        var arrayZone = document.querySelector('#array-zone');
+        // 標題
+        var arrayForEach = document.createElement('h3');
+        arrayForEach.textContent = 'Array[forEach]';
+        arrayZone.appendChild(arrayForEach);
+        // Foreach
+        fruits.forEach(function (f, index) { //利用f接取
+            var fruit = document.createElement('div');
+            fruit.textContent = f + '-' + index;
+            arrayZone.appendChild(fruit);
+        });
+
+        //---------------------------
+
+        // 標題
+        var arrayMapJoin = document.createElement('h3');
+        arrayMapJoin.textContent = 'Array[map,join]';
+        arrayZone.appendChild(arrayMapJoin);
+        // Map -> 回傳一個陣列
+        var fruits2 = fruits.map(function (f) {
+            return f.toUpperCase(); //回傳toUpperCase 轉成大寫英文
+            // return f;
+        });
+
+        // var textNode = document.createTextNode(fruits2.join('----&----'));
+        arrayZone.appendChild(document.createTextNode(fruits2.join('----&----')));
+
+        //分離字串
+        // var out = cc.split('----&----');
+        // cc.split(/&|8/gi); //正規表達式
+
+        //---------------------------
+
+        // 標題
+        var arrayFilterLength = document.createElement('h3');
+        arrayFilterLength.textContent = 'Array[filter, length]';
+        arrayZone.appendChild(arrayFilterLength);
+        //Filter
+        var fruits3 = fruits.filter(function (f) {
+            return f !== 'Orange';
+        });
+        arrayZone.appendChild(document.createTextNode(fruits3.length + '個水果為' + fruits3.join(', ')));
+
+        //---------------------------
+
+        var wuskai = {
+            name: '吳少凱',
+            age: 32,
+            '感情狀況': '單身',
+            偶像: '初音',
+            'Github-Site': 'https://github.com/wuskai/',
+            // 1.----------------------
+            // say: function (message) {
+            //     if (message === '初音只是軟體') {
+            //         return '什麼叫初音是個軟體而以.....想決鬥嗎？！！！！';
+            //     } else if (message === '好啦 應該說她"本來"是個軟體') {
+            //         return '什麼叫做「本來」是個軟體！ 你又要決鬥了嗎！？？？？';
+            //     } else {
+            //         return '哼哼';
+            //     }
+
+            // }
+            //2.----------------------
+            // say: function (message) {
+            //     let response;
+            //     switch (message) {
+            //         case '初音只是軟體':
+            //             response = '什麼叫初音是個軟體而以.....想決鬥嗎？！！！！';
+            //             break;
+            //         case '好啦 應該說她"本來"是個軟體':
+            //             response = '什麼叫做「本來」是個軟體！ 你又要決鬥了嗎！？？？？';
+            //             break;
+            //         case '??':
+            //             response = '沒有很可以，但你惹不起';
+            //             break;
+            //         case '???':
+            //             response = '贏要一起狂 輸要一起扛';
+            //             break;
+            //         default:
+            //             response = '哼哼';
+            //             break;
+            //     }
+            //     return response;
+            // },
+            //3.----------------------
+            say: function (message) {
+                if (message.indexOf('安安') !== -1) {
+                    return '安安你好啊';
+                }
+                return newBBOData[message].join(',') || this.words[message] || '哼哼'; //var name = 'skai' //var age = name == 'skai' ? 32 : 20;
+            },
+            words: {
+                '沒有很可以': '但你惹不起',
+                '贏要一起狂': '輸要一起扛',
+                '狼若回頭 必有緣由': '不是報恩 就是報仇',
+                '欠我錢我可以笑笑的': '但背叛我 就七天回家！',
+                '我也是笑笑的啦': '你要那麼自以為我也沒差',
+            }
+
+
+        };
+
+        // wuskai['Github-Site'];
+        // wuskai.say();
+        // wuskai.birth = new Date('1986/1/11');
+        // wuskai.birth.getFullYear();
+        // wuskai.birth.getMonth();
+
+        //---------------------------
+
+        var wuskaiTable = document.querySelector('#object-zone table');
+        //專門給object用的
+        for (var key in wuskai) {
+
+            if (key !== 'say' && key !== 'words') // 判斷
+            { //shift + {}
+                var tr = document.createElement('tr');
+                var keyTd = document.createElement('td');
+                var valueTd = document.createElement('td');
+                //分別放入key跟value
+                keyTd.textContent = key;
+                valueTd.textContent = wuskai[key];
+
+                tr.appendChild(keyTd);
+                tr.appendChild(valueTd);
+                wuskaiTable.appendChild(tr);
+            }
+        }
+
+        //---------------------------
+
+        var robotZone = document.querySelector('#wurobot-zone');
+        var messageText = document.querySelector('#input-wuskai');
+        // var button = document.querySelector('#')
+
+        document.querySelector('#btn-wuskai').addEventListener('click', function () {
+            var message = document.createElement('div');
+            var response = document.createElement('div');
+
+            message.textContent = '下巴:' + messageText.value; //輸入的元素都會有value值
+            response.textContent = wuskai.name + ': ' + wuskai.say(messageText.value);
+            messageText.value = ''; //清空blank
+
+            var photo1 = document.createElement('div');
+            photo1.className = 'photo1';
+            message.style.overflow = 'auto';
+            var photo2 = document.createElement('div');
+            photo2.className = 'photo2';
+            response.style.overflow = 'auto';
+
+            message.appendChild(photo1);
+            response.appendChild(photo2);
+
+            robotZone.appendChild(message);
+            robotZone.appendChild(response);
+        });
+
+        //---------------------------
+
+        // messageText.addEventListener('keypress', function (event) { //e=event
+        //     if (event.keyCode == '13') {
+        //         document.querySelector('#btn-wuskai').addEventListener('click', function () {
+        //             var message = document.createElement('div');
+        //             var response = document.createElement('div');
+
+        //             message.textContent = '下巴:' + messageText.value; //輸入的元素都會有value值
+        //             response.textContent = wuskai.name + ': ' + wuskai.say(messageText.value);
+
+        //             var photo1 = document.createElement('div');
+        //             photo1.className = 'photo1';
+        //             message.style.overflow = 'auto';
+        //             var photo2 = document.createElement('div');
+        //             photo2.className = 'photo2';
+        //             response.style.overflow = 'auto';
+
+        //             message.appendChild(photo1);
+        //             response.appendChild(photo2);
+
+        //             robotZone.appendChild(message);
+        //             robotZone.appendChild(response);
+        //         });
+        //     }
+        // });
+
+        //---------------------------
+    </script>
+</body>
+
+</html>

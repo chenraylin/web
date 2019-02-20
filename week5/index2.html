@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--引入函式庫--->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+    <!--引入函式庫--->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        .station {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #aaa;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            transform: translate(-3px, -3px);
+        }
+
+        .station:hover {
+            border: 1px solid pink;
+            cursor: pointer;
+        }
+
+        .station-3 {
+            background-color: green;
+        }
+
+        .station-2 {
+            background-color: yellow;
+        }
+
+        .station-1 {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // // function reqListener() {
+        // //     console.log(this);
+        // // }
+
+        // var oReq = new XMLHttpRequest();
+        // oReq.responseType = 'json';
+
+        // // oReq.addEventListener("load", reqListener);
+        // oReq.addEventListener("load", function() {
+        //     console.log(this);
+        // });
+
+
+        // oReq.open("GET", "https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz");
+
+        // oReq.send();
+        //  // ----------------------------------------------------------------------------------------------------------
+        // fetch('https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz')
+        //    .then(function (response) {
+        //        console.log(response)
+        //        return response.json();
+        //    })
+        //    .then(function (myJson) {      // .then(function (response) {
+        //        console.log(myJson);       // let myjson = respose.json()
+        //    });                            //});
+        //  // ----------------------------------------------------------------------------------------------------------
+        // 3857 or 3826 // 國土測繪中心的地圖不用錢 
+        var epsg3857 =
+            "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs";
+
+
+        axios.get('https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz')
+            .then(function (response) {
+                // handle success
+
+                let oData = response.data;
+
+                let x = [];
+                let y = [];
+                let data = Object.values(oData.retVal).map((item) => {
+                    let xy = proj4(epsg3857, [parseFloat(item.lng), +item.lat]);
+                    item.xy = xy;
+
+                    x.push(xy[0]);
+                    y.push(xy[1]);
+
+                    return item;
+                });
+
+                let maxX = Math.max(...x);
+                let maxY = Math.max(...y);
+
+                let minX = Math.min(...x);
+                let minY = Math.min(...y);
+
+                let rateX = 800 / (maxX - minX);
+                let rateY = 600 / (maxY - minY);
+
+                let minLngLat = proj4(epsg3857, proj4.WGS84, [minX, minY]);
+                let maxLngLat = proj4(epsg3857, proj4.WGS84, [maxX, maxY]);
+
+                let img = document.createElement('img');
+                img.src =
+                    'https://wms.nlsc.gov.tw/wms?&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX=' +
+                    minLngLat[0] + ',' + minLngLat[1] + ',' +
+                    maxLngLat[0] + ',' + maxLngLat[1] +
+                    '&SRS=EPSG:4326&WIDTH=800&HEIGHT=600&LAYERS=EMAP&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE';
+                document.body.appendChild(img);
+                img.style.position = 'absolute';
+                img.style.left = '20px';
+                img.style.top = '20px';
+
+                data.forEach((item) => {
+                    let station = document.createElement('div');
+                    station.className = 'station';
+                    station.style.left = (item.xy[0] - minX) * rateX + 20 + 'px';
+                    station.style.top = (maxY - item.xy[1]) * rateY + 20 + 'px';
+
+                    // if (item.sbi > 50) {
+                    //     station.style.backgroundColor = '#0F0';
+                    // } else if (item.sbi > 25){
+                    //     station.style.backgroundColor = '#0FF';
+                    // } else if (item.sbi > 10){
+                    //     station.style.backgroundColor = 'red';
+                    // }
+
+                    if (item.sbi > 50) {
+                        station.className = 'station station-3'
+                    } else if (item.sbi > 25) {
+                        station.classList.add('station-2');
+                    } else if (item.sbi > 10) {
+                        station.classList.add('station-1');
+                    }
+
+                    document.body.appendChild(station);
+
+                    station.addEventListener('click', () => {
+                        let temp1 = Object.keys(item).map((key) => {
+                            return key + ':' + item[key];
+                        });
+                        alert(temp1.join('\n'));
+                        // console.log(temp1);
+                    });
+                });
+
+                // navigator.geolocation.getCurrentPosition(function (position) {
+                //     do_something(position.coords.latitude, position.coords.longitude);
+                // });
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let xy = proj4(epsg3857, [position.coords.longitude, position.coords.latitude]);
+                    // <i class="material-icons">
+                    // face
+                    // </i>
+                    let icon = document.createElement('i');
+                    icon.className= 'material-icons';
+                    icon.textContent = 'face';
+
+                    icon.style.position ='absolute';
+                    icon.style.left = (xy[0] - minX) * rateX + 20 + 'px';
+                    icon.style.top = (maxY - xy[1]) * rateY + 20 + 'px';
+                    icon.style.color = 'pink';
+
+                    document.body.appendChild(icon);
+                });
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+
+            })
+            .then(function () {
+                // always executed
+            });
+    </script>
+</body>
+
+</html>

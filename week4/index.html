@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>||Working with elements||</title>
+</head>
+
+<body>
+    <div id="div1">The text above has been created dynamically.</div>
+    <script>
+        // 當被loading時跑這個程式(確保用)
+        document.body.onload = addElement;
+        var c = 123;
+
+        function addElement() {
+
+            //------------
+
+            //放入小寫tag名稱
+            var newDiv = document.createElement("div");
+            var button = document.createElement("button");
+            var newContent = document.createTextNode("Hi there and greetings!");
+            //以下為放入多個的例子
+            newDiv.appendChild(newContent);
+            newDiv.appendChild(button);
+            //以下只能放一個
+            // newDiv.textContent = "test";
+
+            //------------
+
+            var currentDiv = document.getElementById("div1");
+            //在body中，於currentDiv前面插入newDiv
+            // document.body.insertBefore(newDiv, currentDiv);
+            //以下剛好相反
+            // document.body.appendChild(newDiv);
+
+            //------------
+
+            // 實字符號
+            var obj = {};
+            var ar = [];
+
+            var obj = new Object;
+            var ar = new Array;
+            
+            var string = “”;
+            var boolean = true;
+            
+            var string = String;
+            var boolean = Boolean;
+
+            function Object() {
+                return [];
+            }
+            var person = new Object();
+
+            // ex
+            var arr = [1, 2, 3, 4];
+            var arr = new Array(1, 2, 3, 4);
+            var arr_fake = new array(5);
+            
+            //------------
+
+
+        }
+    </script>
+</body>
+
+</html>

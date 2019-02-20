@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+
+    <style>
+        .station{
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: yellow;
+            border: 1px solid #000;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // // XMLHttpRequest
+        // function reqListener() {
+        //     console.log(this); // this = oReq
+        // }
+
+
+        // var oReq = new XMLHttpRequest(); // 利用XMLHttpRequest直接拿別人的即時資料 //new此為物件類別
+        // oReq.responseType = 'json'; //設定接收為json object
+        // oReq.addEventListener("load", reqListener); // 啟用監聽：載入進來後
+        // oReq.open("GET", "https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz"); // GET=read; POST(隱密資料)=create; PUT=update; DELETE=delete;
+        // oReq.send();
+
+        // // JSON.parse(oReq.responseText) 將json string轉為js object 
+        // //JSON.stringify 將js object轉為json string(字串化)
+
+        // // FETCH
+        // fetch('https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz') // promise的做法
+        //     .then(function (response) { // call-back function
+        //         console.log(response)
+        //         return response.json();
+        //         //return response.text();
+        //     })
+        //     .then(function (myJson) {
+        //         console.log(myJson);
+        //     });
+
+        var epsg3857 =
+            "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs"
+
+
+        // AXIOS
+        axios.get('https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz') // 非同步的物件為promise
+            .then(function (response) {
+                // handle success
+                // console.log(response);
+                let oData = response.data;
+                
+                // 經緯度座標轉換至平面座標-----------
+                let x = [];
+                let y = [];
+                // let Data = Object.keys(oData.retVal).map(function(key) {
+                //     let item = oData.retVal[key];
+                //     return item;
+                // }) //object回傳為array
+                let Data = Object.values(oData.retVal).map((item) => {
+                    let xy = proj4(epsg3857, [parseFloat(item.lng), +item.lat]);
+                    item.xy = xy;
+
+                    x.push(xy[0]);
+                    y.push(xy[1]);
+                    
+                    return item;
+                });
+                // console.log(Data);
+                // console.log(x);
+                // console.log(y);
+
+                let maxX = Math.max(...x); // Math.max(...[14,1,2,3,4,10]) 解除陣列模式
+                let maxY = Math.max(...y);
+                let minX = Math.min(...x);
+                let minY = Math.min(...y);
+
+                let rateX = 600 / (maxX - minX);
+                let rateY = 600 / (maxY - minY);
+                
+                Data.forEach((item) => {
+                    let station = document.createElement('div');
+                    station.className = "station";
+                    station.style.left = (item.xy[0] - minX) * rateX +'px';
+                    station.style.top  = (maxY - item.xy[1]) * rateY +'px';
+
+                    document.body.appendChild(station);
+
+                });
+
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+                console.log('always executed');
+            });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+</head>
+
+<body>
+    <button id="test1">test1</button>
+    <button id="test2">test2</button>
+    <button id="test3">test3</button>
+    <button id="test4">test4</button>
+    <button id="test5">test5</button>
+
+    <!-- <button id="btn">測試中</button> -->
+
+    <!-- <div class="abc1" id="test">test</div>
+    <div class="abc2" id="test2">test</div>
+    <div class="abc3" id="test3">test</div>
+    <div class="abc4" id="test4">test</div> -->
+
+    <script>
+        // 在function中的變數為區域變數，而非全域變數。[閉包]
+
+        for (let i = 1; i <= 5; i++) {
+        // document.querySelector('#test' + i).addEventLister('click', clickEvent);
+        document.querySelector('#test' + i).addEventListener('click', function () {
+        alert('測試完畢'+i+'!!!!');
+        });
+        }
+        // --------------------------  
+        // js改變style
+        // btn.style.backgroundColor = '#0f0'
+        // --------------------------   
+        // for (var i = 1; i <= 5; i++) {
+        // // document.querySelector('#test' + i).addEventLister('click', clickEvent);
+        // document.querySelector('#test' + i).addEventListener('click', function () {
+        // alert('測試完畢'+i+'!!!!');
+        // });
+        // }
+        // -------------------------- 
+        for (var i = 1; i <= 5; i++) {
+            addClickEvent(i)
+        }
+
+        function addClickEvent(i){
+
+        }       
+        // console.log(document.querySelectorAll('.abc1'));
+        // console.log(document.querySelectorAll('#test2'));
+        // --------------------------
+        // var testElement = document.querySelectorAll('.abc1');
+        // var testElement2 = document.querySelectorAll('#test2');
+        // --------------------------
+        // var test11 = document.querySelector('#btn');
+        // test11.addEventListener('click', clickEvent);
+        // --------------------------
+        // function clickEvent() {
+        //     alert('測試完畢');
+        // }
+        // --------------------------
+        // var c = 'Apple';
+        // var abc = 123;
+        // console.log(c)
+    </script>
+</body>
+
+</html>

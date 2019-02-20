@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- Console: $=document.queryselector() or jQuery可以看有哪些功能 -->
+</head>
+
+<body>
+
+    <!-- <div id="test1">123</div> document.querySelector('#test1') or document.getElementById('test1')  -->
+    <!-- <div class="test1">321</div> -->
+    <!-- $('#test1') $('.test1')  -->
+    <!-- 填空 -->
+    <div>
+        <input name="block">
+        <!-- 單選 -->
+        <input id="radio1" type="radio" name="gender">
+        <label for="radio1">1</label>
+
+        <label>
+            <input type="radio" name="gender">2
+        </label>
+
+        <label>
+            <input type="radio" name="gender">3
+        </label>
+
+        <input type="radio" name="gender">4
+    </div>
+    <div id="checkbox-area">
+        <!-- 複選 -->
+        <input type="checkbox" checked>
+        <input type="checkbox">
+        <input type="checkbox">
+        <input type="checkbox">
+    </div>
+
+    <button value="#0ff">1</button>
+    <button value="#fff">2</button>
+    <button value="#0f0">3</button>
+    <!-- --------- -->
+    <!-- var check = document.getElementById('radio1'); -->
+    <!-- check.checked = true; -->
+    <!-- --------- -->
+    <script>
+        // //---------------------------------
+        // var inputs = document.querySelectorAll('#checkbox-area input');
+        // for (let i = 0; i < inputs.length; i++) {
+        //     inputs[i].checked = true;
+        // }
+        // //---------------------------------
+        // console.log($('#radio1').attr('type')); //取值
+        // console.log($('#radio1').attr('name', 'test')); //給值
+        // console.log($('#radio1').attr('checked')); //奇怪的東西(??)
+        // console.log($('#radio1').prop('checked')); //回傳true or false
+        // $('#checkbox-area input').prop('checked', true);
+        // //---------------------------------
+        // var buttons = document.querySelectorAll('button');
+
+        // for(let i = 0; i<buttons.length; i++){
+        //     let button = buttons[i];
+        //     button.addEventListener('click', function(){
+        //         alert(123)
+        //     });
+        // }
+        // //---------------------------------
+        // $('button').click(function () {
+        //     alert('456');
+        // });
+        // //---------------------------------
+        // var buttons = document.querySelectorAll('button');
+
+        // for (let i = 0; i < buttons.length; i++) {
+        //     let button = buttons[i];
+        //     button.className = 'button-test t123'
+        //     button.classList.add = 'bbo'
+        // };
+        // //---------------------------------
+        // $('button').click(function () {
+        //     alert('456');
+        // }).addClass('button-test');
+        // //---------------------------------
+        // var buttons = document.querySelectorAll('button');
+
+        // for (let i = 0; i < buttons.length; i++) {
+        //     let button = buttons[i];
+        //     button.className = 'button-test t123'
+        //     button.classList.add = 'bbo'
+
+        //     button.style.border = "none";
+        //     button.style.backgroundColor = '#00f';
+        //     button.style.color = '#fff';
+        //     button.style.padding = '6px 12px';
+
+        //     button.style.backgroundColor = button.value;
+        // };
+        // //---------------------------------
+        $('button')
+            .addClass('button-test')
+            .click(function () {
+                console.log(this);
+                alert('456');
+            }).css('border', '6px')
+            .css({
+                'border': 'none',
+                'backgroundColor': '#00f',
+                'color': '#fff',
+                'padding': '6px 12px'
+            })
+            .css('backgroundColor', function(){
+                console.log(this);
+                return this.value;
+            })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- Console: $=document.queryselector() or jQuery可以看有哪些功能 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .station {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: blue;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            transform: translate(-1.5px, -1.5px);
+        }
+
+        .station.hover {
+            border: 1px solid red;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            transform: translate(-4px, -4px);
+        }
+
+        img {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        proj4.defs("EPSG:3857",
+            "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs"
+        );
+
+
+        var lats = [];
+        var lons = [];
+
+        var parkData;
+        $.ajax({
+                url: "https://cors.io/?https://data.tycg.gov.tw/opendata/datalist/datasetMeta/download?id=f4cc0b12-86ac-40f9-8745-885bddc18f79&rid=0daad6e6-0632-44f5-bd25-5e1de1e9146f",
+                cache: false, //清除快取->不要抓快取的東西
+                dataType: "json"
+            })
+            .done(function (result) { //done=then fail always
+                // console.log(result);
+                parkData = result.parkingLots.map(function (element) { //map有回傳 //forEach沒有回傳
+                    lats.push(element.wgsY);
+                    lons.push(element.wgsX);
+
+                    //WGS84 -> TWD97(epsg3857)
+
+                    let twd97 = proj4(proj4("EPSG:3857"), [element.wgsX, element.wgsY]);
+                    element.twd97 = twd97;
+                    return element;
+                });
+
+                let maxlon = Math.max(...lons);
+                let minlon = Math.min(...lons);
+                let maxlat = Math.max(...lats);
+                let minlat = Math.min(...lats);
+
+                let maxXY = proj4(proj4("EPSG:3857"), [maxlon, maxlat]);
+                let minXY = proj4(proj4("EPSG:3857"), [minlon, minlat]);
+                //console.log(maxXY);
+
+                // let width = maxXY[0] - minXY[0];
+                let rateX = 800 / (maxXY[0] - minXY[0]);
+                let rateY = 600 / (maxXY[1] - minXY[1]);
+
+                $(document.body).append($('<img>').attr('src',
+                    'https://wms.nlsc.gov.tw/wms?&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&BBOX=' +
+                    minlon + ',' + minlat + ',' +
+                    maxlon + ',' + maxlat +
+                    '&SRS=EPSG:4326&WIDTH=' + 800 + '&HEIGHT=' + 600 +
+                    '&LAYERS=EMAP&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE'
+                ));
+
+                parkData.forEach(function (element) {
+                    var station = $('<div></div>')
+                        .addClass('station')
+                        .css({
+                            left: (element.twd97[0] - minXY[0]) * rateX + 20 + 'px',
+                            top: (maxXY[1] - element.twd97[1]) * rateY + 20 + 'px'
+                        })
+                        .click(function () {
+                            let alertList = Object.key(element).map(function (key) {
+                                return key + ":" + element[key];
+                            });
+
+                            alert(alertList.join('\n'));
+                        });
+
+                    $(document.body).append(station); //jquery
+                });
+
+            });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+2019/01/08 GIS 教學記錄
+19:10
+
+VS:
+下載：beautify / chinese
+ctrl+shift+f 格式化
+command +/ 註解
+中文化：下載
+快捷設定 從 喜好設定>鍵盤快捷鍵>beautify
+
+
+ST3:
+sublime text 3 html-css-js prettify
+(ctrl)command+shift+p = package -> install package -> prettify
+Download Node.js: https://nodejs.org/en/download/
+command+shift+H 格式化
+
+前端/後端：
+網頁放置於後端編寫網頁，需透過網路才能至伺服器取出網頁，到了瀏覽器把網頁打開。
+使用者利用瀏覽器輸入留言(前端)->傳至伺服器端(後端語言)
