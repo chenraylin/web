@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Youbike</title>
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        #mapid {
+            height: calc(100vh - 16px);
+            background-color: #eee;
+            box-shadow: 0 1px 3px black, 0 1px 2px black;
+            /* border-radius:hover; */
+            /* width: 500px; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapid"></div>
+
+
+    <script>
+        var mymap = L.map('mapid').setView([25.047518, 121.535358], 12);
+        L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}').addTo(mymap);
+        axios.get('https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz')
+            .then(function (response) {
+                // handle success
+                //console.log(response);
+                // for (car key in response.data.retVal){}
+                Object.values(response.data.retVal).forEach(station => {
+                    let lng = parseFloat(station.lng);
+                    let lat = parseFloat(station.lat);
+                    var marker = L.marker([lat, lng]);
+                    marker.addTo(mymap);
+                    
+                    let content = document.createElement('div');
+                    for (let key in station) {
+                        let div = document.createElement('div');
+                        div.textContent = key + ":" + station[key]
+                        content.appendChild(div);
+                    }
+                    marker.bindPopup(content);
+                    //------------------------------
+                    //Error:
+                    // let content = [];
+                    // for (let key in station) {
+                    //     content.push(key + ":" + station[key]);
+                    // }
+
+                    // Error: marker.bindPopup(content.join('\n'))
+                    //------------------------------
+                    // function onMapClick(e) {
+                    //     popup
+                    //         .setLatLng(e.latlng)
+                    //         .setContent("You clicked the map at " + e.latlng.toString())
+                    //         .openOn(mymap);
+                    // }
+                });
+
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+
+    <style>
+        #mapid {
+            height: 700px;
+            width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapid"></div>
+
+
+    <script>
+        var mymap = L.map('mapid').setView([23.5, 121], 8);
+        // L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}').addTo(mymap);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.comic',
+            accessToken: 'pk.eyJ1IjoiY2hlbnJheWxpbiIsImEiOiJjanRmc2x6azIxdzc3NDRudWpxMjc2b3l0In0.cQvAQdRNPQj1fjWPQEgqWw'
+        }).addTo(mymap);
+        // mymap.getCenter()
+
+        // Markers
+        // var myIcon = L.icon({
+        //     iconUrl: 'https://scontent-hkg3-2.xx.fbcdn.net/v/t1.0-9/13892152_1173089419415159_374381691523589109_n.jpg?_nc_cat=105&_nc_ht=scontent-hkg3-2.xx&oh=7769fad12e5b2806af6daad0735d6bc3&oe=5D184E67',
+        //     iconSize: [38, 38],
+        //     iconAnchor: [19, 19],
+        //     popupAnchor: [-3, -76],
+        //     // shadowUrl: 'my-icon-shadow.png',
+        //     // shadowSize: [68, 95],
+        //     // shadowAnchor: [22, 94]
+        // });
+
+        // var marker = L.marker([23.5, 121], {
+        //     icon: myIcon
+        // });
+
+        var marker = L.marker([23.5, 121]);
+        marker.addTo(mymap)
+        // marker.setLating([])
+
+        //Circle
+        var circle = L.circle([24.1, 121.3], {
+            stroke: false,
+            weight: 1,
+            color: 'black',
+            fillColor: 'red',
+            fillOpacity: 0.5,
+            radius: 500
+        }).addTo(mymap);
+
+        // Polygon
+        var polygon = L.polygon([
+                [23.08, 120.509],
+                [23.06, 120.503],
+                [23.047, 120.51]
+            ], // outer ring
+            [
+                [23.08, 120.509],
+                [23.06, 120.503],
+                [23.047, 120.51]
+            ]).addTo(mymap);
+
+        //Popup
+        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+        circle.bindPopup("I am a circle.");
+        polygon.bindPopup("I am a polygon.");
+        // var popup1 = L.popup()
+        //     .setLatLng([23.5, 120.8])
+        //     .setContent("I am a standalone popup.")
+        //     .openOn(mymap);
+        var popup = L.popup([
+            // offset: L.point(3,3);
+        ]);
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(mymap);
+        }
+
+
+        mymap.on('click', onMapClick);
+        //mymap.on('mapmove', onMapClick);
+
+    </script>
+</body>
+
+</html>

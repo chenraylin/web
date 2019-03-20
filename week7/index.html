@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+
+<body>
+    <p>Date: <input type="text" id="datepicker" value="20190306"></p>
+    <button id="get" class="ui-button ui-widget ui-corner-all">Results</button>
+
+    <div id="tabs">
+
+    </div>
+
+    <script>
+        var today = new Date();
+        var month = today.getMonth() + 1;
+        var day = today.getDate();
+
+        var todayString = `${today.getFullYear()}${month > 9 ? month : '0' + month}${day > 9 ? day : '0' + day}`;
+        $("#datepicker").datepicker({
+            dateFormat: "yymmdd"
+        }).val(todayString);
+        // npm i express
+        // npm i request
+        // npm init
+        // html: localhost:3000
+        // http://localhost:3000/proxy?http://data.nba.net/prod/v3/today.json
+        // postman > get > http://localhost:3000/proxy?http://data.nba.net/prod/v3/today.json
+
+        $('#tabs').tabs();
+        $('#get').click(function () {
+            var date = $("#datepicker").val(); //document.getElementById('datapicker').value
+            // console.log(date)
+            $.ajax('https://cors.io/?http://localhost:3000/proxy?http://data.nba.net/prod/v2/' + date + '/scoreboard.json')
+                .done(function (json) {
+                    // console.log(json);
+
+                    let listString = "";
+                    let divString = "";
+                    for (let i = 0, imax = json.numGames; i < imax; i++) {
+                        let game = json.games[i];
+                        let teams = game.vTeam.triCode + ' v.s. ' + game.hTeam.triCode;
+
+                        listString += '<li><a href="#tabs-' + i + '">' + teams + '</a></li>'
+                        divString +=`
+                        <div id="tabs-${i}">
+                            <p>${game.nugget.text}</p>
+                            <p>比賽時間：${game.gameDuration.hours}小時${game.gameDuration.minutes}分</p>
+                            <p>${game.vTeam.triCode}:${game.vTeam.score}</p>
+                            <p>${game.hTeam.triCode}:${game.hTeam.score}</p>
+                            <p></p>    
+                        </div>
+                        `;
+
+                    }
+
+                    $('#tabs').tabs("destroy").html(
+                        `
+                        <ul>${listString}</ul>
+                        ${divString}
+                        `
+                    ).tabs();
+                });
+        });
+    </script>
+</body>
+
+</html>
